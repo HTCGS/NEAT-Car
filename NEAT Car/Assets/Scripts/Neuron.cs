@@ -39,6 +39,7 @@ public class Neuron
             inputSum += item;
         }
         value = Function(inputSum);
+        InputValues.Clear();
         this.Value = value;
     }
 

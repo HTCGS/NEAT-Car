@@ -20,14 +20,13 @@ public class NeuroNet
     {
         for (int i = 0; i < input; i++)
         {
-            Neuron neuron = new Neuron(Neuron.Sigmoid);
+            Neuron neuron = new Neuron(x => x);
             neuron.InputsSum = 1;
             this.Input.Add(neuron);
         }
         for (int i = 0; i < output; i++)
         {
             Neuron neuron = new Neuron(Neuron.Sigmoid);
-            neuron.InputsSum = 1;
             this.Output.Add(neuron);
         }
     }

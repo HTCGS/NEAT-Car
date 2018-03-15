@@ -33,7 +33,6 @@ public static class GeneticAlgorithm
         int keeped = 0;
         foreach (var item in Net)
         {
-
             if (Random.Range(0, 100) < chance)
             {
                 reproduction.Add(item.Control.ToConnectionList());
