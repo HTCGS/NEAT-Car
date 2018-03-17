@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Environment : MonoBehaviour
 {
@@ -13,18 +14,51 @@ public class Environment : MonoBehaviour
 
     public float MaxTime;
 
-    public float Time;
+    private float runTime;
+    private float globalTime;
 
-	void Start ()
+    private int Generation = 1;
+    public Text GenText;
+
+    void Start ()
     {
         ObjectPool.InitializeObjects(CarPrefab, Population);
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
         ObjectPool.EnableObjects();
+        GeneticAlgorithm.InitializePopulation(ObjectPool.Objects);
         Instance = this;
 	}
 	
 	void Update ()
     {
-		
-	}
+        runTime += Time.deltaTime;
+        globalTime += Time.deltaTime;
+        if (runTime >= 1)
+        {
+            if (!ObjectPool.IsRunable())
+            {
+                NewGeneration();
+                globalTime = 0;
+            }
+            runTime = 0;
+        }
+        if (globalTime >= MaxTime)
+        {
+            ObjectPool.DisableCar();
+            NewGeneration();
+            globalTime = 0;
+            runTime = 0;
+        }
+    }
+
+    private void NewGeneration()
+    {
+        GeneticAlgorithm.SortPopulation();
+        GeneticAlgorithm.Selection();
+        ObjectPool.DisableObjects();
+        ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
+        ObjectPool.EnableObjects();
+        Generation++;
+        GenText.text = "Generation " + Generation;
+    }
 }

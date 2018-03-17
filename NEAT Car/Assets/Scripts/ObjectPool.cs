@@ -48,4 +48,21 @@ public static class ObjectPool
             item.SetActive(true);
         }
     }
+
+    public static bool IsRunable()
+    {
+        foreach (var item in Objects)
+        {
+            if (item.GetComponent<Car>().run) return true;
+        }
+        return false;
+    }
+
+    public static void DisableCar()
+    {
+        foreach (var item in Objects)
+        {
+            item.GetComponent<Car>().run = false;
+        }
+    }
 }

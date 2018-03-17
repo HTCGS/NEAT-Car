@@ -17,18 +17,22 @@ public class Car : MonoBehaviour
     public GameObject LeftSensor;
     public GameObject MiddleSensor;
     public GameObject RightSensor;
+    public LayerMask Mask;
 
-    private bool run = true;
+    [HideInInspector]
+    public bool run = true;
+
     private List<float> input;
     private List<float> output;
 
     private float time;
     private Vector3 lastPos;
+    private float fitParam = 1;
 
     void Start()
     {
         input = new List<float>();
-        output = new List<float>(){ 0, 0, 1};
+        output = new List<float>() { 0, 0, 1 };
         lastPos = this.transform.position;
         Control = new NeuroNet(4, 3);
         Control.GenerateDefaultNet(4);
@@ -41,17 +45,14 @@ public class Car : MonoBehaviour
             input = SensorData();
             input.Add(output[2] * Speed);
             output = Control.Run(input);
+
+            //Debug.Log(input[0] + "-" + input[1] + "-" + input[2]);
             this.transform.Rotate(this.transform.up * -Rotation * output[0] * Time.deltaTime, Space.Self);
             this.transform.Rotate(this.transform.up * Rotation * output[1] * Time.deltaTime, Space.Self);
             this.transform.position += this.transform.forward * Speed * output[2] * Time.deltaTime;
 
-            Fitness += (this.transform.position - lastPos).magnitude;
+            Fitness += (this.transform.position - lastPos).magnitude * fitParam;
             lastPos = this.transform.position;
-
-            //this.transform.Rotate(this.transform.up * -Rotation * output[0], Space.Self);
-            //this.transform.Rotate(this.transform.up * Rotation * output[1], Space.Self);
-            //this.transform.position += this.transform.forward * Speed * output[2];
-
         }
     }
 
@@ -59,16 +60,29 @@ public class Car : MonoBehaviour
     {
         Fitness = 0;
         run = true;
+        lastPos = this.transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        run = false;
+        if (other.transform.tag != "Start") run = false;
+        else fitParam = 1;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.transform.tag == "Start") fitParam = 0;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        
+        if (other.transform.tag == "Start")
+        {
+            //float zAngle = Vector3.Angle(this.transform.forward, other.transform.forward);
+            //if (zAngle >= 0 && zAngle <= 90) fitParam = 1;
+            //else fitParam = -1;
+            fitParam = 1;
+        }
     }
 
     private List<float> SensorData()
@@ -79,19 +93,20 @@ public class Car : MonoBehaviour
 
         List<float> data = new List<float>();
         RaycastHit raycastHit;
-        if (Physics.Raycast(LeftSensor.transform.position, LeftSensor.transform.forward, out raycastHit, 1f))
+        if (Physics.Raycast(LeftSensor.transform.position, LeftSensor.transform.forward, out raycastHit, 1f, Mask))
         {
+
             float distanse = (raycastHit.point - LeftSensor.transform.position).magnitude;
             data.Add(distanse);
         }
         else data.Add(0);
-        if (Physics.Raycast(MiddleSensor.transform.position, MiddleSensor.transform.forward, out raycastHit, 1f))
+        if (Physics.Raycast(MiddleSensor.transform.position, MiddleSensor.transform.forward, out raycastHit, 1f, Mask))
         {
             float distanse = (raycastHit.point - MiddleSensor.transform.position).magnitude;
             data.Add(distanse);
         }
         else data.Add(0);
-        if (Physics.Raycast(RightSensor.transform.position, RightSensor.transform.forward, out raycastHit, 1f))
+        if (Physics.Raycast(RightSensor.transform.position, RightSensor.transform.forward, out raycastHit, 1f, Mask))
         {
             float distanse = (raycastHit.point - RightSensor.transform.position).magnitude;
             data.Add(distanse);
