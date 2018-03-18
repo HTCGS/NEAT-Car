@@ -37,7 +37,8 @@ public static class GeneticAlgorithm
         }
         weightsList.Add(weights);
 
-        for (int i = 1; i < Net.Count / 2; i++)
+        int heirSum = (int)(Net.Count * 0.70f);
+        for (int i = 1; i < heirSum; i++)
         {
             weights = new List<float>();
             for (int j = 0; j < bestNet.Count; j++)
@@ -48,7 +49,7 @@ public static class GeneticAlgorithm
             weightsList.Add(weights);
         }
 
-        for (int i = Net.Count / 2; i < Net.Count; i++)
+        for (int i = heirSum; i < Net.Count; i++)
         {
             weights = new List<float>();
             for (int j = 0; j < bestNet.Count; j++)
@@ -121,8 +122,8 @@ public static class GeneticAlgorithm
     //            weights3.Add(Random.Range(-6f, 6f));
     //            weights4.Add(Random.Range(-6f, 6f));
     //        }
-    //        if (Random.Range(0, 100) < 5) Mutation(weights1);
-    //        if (Random.Range(0, 100) < 5) Mutation(weights2);
+    //        if (Random.Range(0, 100) < 20) Mutation(weights1);
+    //        if (Random.Range(0, 100) < 20) Mutation(weights2);
     //        weightsList.Add(weights1);
     //        weightsList.Add(weights2);
     //        weightsList.Add(weights3);
@@ -143,7 +144,7 @@ public static class GeneticAlgorithm
     public static void Mutation(List<float> weights)
     {
         int index = Random.Range(0, weights.Count);
-        if (Random.Range(0, 100) < 50) weights[index] += weights[index] * 0.05f;
-        else weights[index] -= weights[index] * 0.05f;
+        if (Random.Range(0, 100) < 50) weights[index] += weights[index] * 0.1f;
+        else weights[index] -= weights[index] * 0.1f;
     }
 }

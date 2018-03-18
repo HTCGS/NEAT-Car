@@ -19,6 +19,7 @@ public class Environment : MonoBehaviour
 
     private int Generation = 1;
     public Text GenText;
+    public Text FitnessText;
 
     void Start ()
     {
@@ -57,8 +58,9 @@ public class Environment : MonoBehaviour
         GeneticAlgorithm.Selection();
         ObjectPool.DisableObjects();
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
-        ObjectPool.EnableObjects();
         Generation++;
         GenText.text = "Generation " + Generation;
+        FitnessText.text = "Max fitness " + GeneticAlgorithm.Net[0].Fitness;
+        ObjectPool.EnableObjects();
     }
 }

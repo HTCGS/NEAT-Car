@@ -71,7 +71,6 @@ public class NeuroNet
         }
         if (layers.Length != 1)
         {
-            this.HiddenLayer.Add(layer);
             layer = HiddenLayer[HiddenLayer.Count - 1];
         }
         foreach (var node in layer)

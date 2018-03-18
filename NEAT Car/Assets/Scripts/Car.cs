@@ -35,7 +35,7 @@ public class Car : MonoBehaviour
         output = new List<float>() { 0, 0, 1 };
         lastPos = this.transform.position;
         Control = new NeuroNet(4, 3);
-        Control.GenerateDefaultNet(4);
+        Control.GenerateDefaultNet(5);
     }
 
     void Update()
@@ -78,35 +78,32 @@ public class Car : MonoBehaviour
     {
         if (other.transform.tag == "Start")
         {
-            //float zAngle = Vector3.Angle(this.transform.forward, other.transform.forward);
-            //if (zAngle >= 0 && zAngle <= 90) fitParam = 1;
-            //else fitParam = -1;
             fitParam = 1;
         }
     }
 
     private List<float> SensorData()
     {
-        Debug.DrawLine(LeftSensor.transform.position, LeftSensor.transform.position + LeftSensor.transform.forward * SensorRadius, Color.blue);
-        Debug.DrawLine(MiddleSensor.transform.position, MiddleSensor.transform.position + MiddleSensor.transform.forward * SensorRadius, Color.cyan);
+        Debug.DrawLine(LeftSensor.transform.position, LeftSensor.transform.position + LeftSensor.transform.forward * SensorRadius, Color.green);
+        Debug.DrawLine(MiddleSensor.transform.position, MiddleSensor.transform.position + MiddleSensor.transform.forward * SensorRadius, Color.green);
         Debug.DrawLine(RightSensor.transform.position, RightSensor.transform.position + RightSensor.transform.forward * SensorRadius, Color.green);
 
         List<float> data = new List<float>();
         RaycastHit raycastHit;
-        if (Physics.Raycast(LeftSensor.transform.position, LeftSensor.transform.forward, out raycastHit, 1f, Mask))
+        if (Physics.Raycast(LeftSensor.transform.position, LeftSensor.transform.forward, out raycastHit, SensorRadius, Mask))
         {
 
             float distanse = (raycastHit.point - LeftSensor.transform.position).magnitude;
             data.Add(distanse);
         }
         else data.Add(0);
-        if (Physics.Raycast(MiddleSensor.transform.position, MiddleSensor.transform.forward, out raycastHit, 1f, Mask))
+        if (Physics.Raycast(MiddleSensor.transform.position, MiddleSensor.transform.forward, out raycastHit, SensorRadius, Mask))
         {
             float distanse = (raycastHit.point - MiddleSensor.transform.position).magnitude;
             data.Add(distanse);
         }
         else data.Add(0);
-        if (Physics.Raycast(RightSensor.transform.position, RightSensor.transform.forward, out raycastHit, 1f, Mask))
+        if (Physics.Raycast(RightSensor.transform.position, RightSensor.transform.forward, out raycastHit, SensorRadius, Mask))
         {
             float distanse = (raycastHit.point - RightSensor.transform.position).magnitude;
             data.Add(distanse);
