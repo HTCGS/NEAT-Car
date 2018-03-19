@@ -9,6 +9,8 @@ public class NeuroNet
 
     public List<List<Neuron>> HiddenLayer;
 
+    public int Innovation;
+
     public NeuroNet()
     {
         this.Input = new List<Neuron>();
@@ -20,7 +22,7 @@ public class NeuroNet
     {
         for (int i = 0; i < input; i++)
         {
-            Neuron neuron = new Neuron(x => x);
+            Neuron neuron = new Neuron(Neuron.Input);
             neuron.InputsSum = 1;
             this.Input.Add(neuron);
         }
@@ -37,7 +39,8 @@ public class NeuroNet
         {
             foreach (var outNode in Output)
             {
-                inNode.AddConnection(outNode);
+                inNode.AddConnection(outNode, Innovation);
+                Innovation++;
             }
         }
     }
@@ -51,7 +54,8 @@ public class NeuroNet
             layer.Add(neuron);
             foreach (var node in Input)
             {
-                node.AddConnection(neuron);
+                node.AddConnection(neuron, Innovation);
+                Innovation++;
             }
         }
         this.HiddenLayer.Add(layer);
@@ -64,7 +68,8 @@ public class NeuroNet
                 layer.Add(neuron);
                 foreach (var node in HiddenLayer[i - 1])
                 {
-                    node.AddConnection(neuron);
+                    node.AddConnection(neuron, Innovation);
+                    Innovation++;
                 }
             }
             this.HiddenLayer.Add(layer);
@@ -77,7 +82,8 @@ public class NeuroNet
         {
             foreach (var outNode in Output)
             {
-                node.AddConnection(outNode);
+                node.AddConnection(outNode, Innovation);
+                Innovation++;
             }
         }
     }
@@ -103,6 +109,30 @@ public class NeuroNet
             }
         }
         return conn;
+    }
+
+    public List<Neuron> ToNeuronList()
+    {
+        List<Neuron> neuronList = new List<Neuron>();
+
+        foreach (var node in Input)
+        {
+            neuronList.Add(node);
+        }
+
+        foreach (var nodeList in HiddenLayer)
+        {
+            foreach (var node in nodeList)
+            {
+                neuronList.Add(node);
+            }
+        }
+
+        foreach (var node in Output)
+        {
+            neuronList.Add(node);
+        }
+        return neuronList;
     }
 
     public List<float> Run(List<float> input)
@@ -132,4 +162,76 @@ public class NeuroNet
         return output;
     }
 
+    public List<Neuron> PreviousLayer(Neuron neuron)
+    {
+        foreach (var node in Input)
+        {
+            if (node == neuron) return null;
+        }
+
+        foreach (var node in Output)
+        {
+            if (node == neuron)
+            {
+                if (HiddenLayer.Count != 0)
+                {
+                    return HiddenLayer[HiddenLayer.Count - 1];
+                }
+                else return Input;
+            }
+        }
+
+        for (int i = 0; i < HiddenLayer.Count; i++)
+        {
+            foreach (var node in HiddenLayer[i])
+            {
+                if (node == neuron)
+                {
+                    if (i != 0) return HiddenLayer[i - 1];
+                    else return Input;
+                }
+            }
+        }
+        return null;
+    }
+
+    public bool IsInput(List<Neuron> neuronList)
+    {
+        if (neuronList.Count != Input.Count) return false;
+
+        for (int i = 0; i < Input.Count; i++)
+        {
+            if (neuronList[i] != Input[i]) return false;
+        }
+        return true;
+    }
+
+    public bool IsInput(Neuron neuron)
+    {
+        foreach (var node in Input)
+        {
+            if (node == neuron) return true;
+        }
+        return false;
+    }
+
+    public bool IsOutput(List<Neuron> neuronList)
+    {
+        if (neuronList.Count != Output.Count) return false;
+
+        for (int i = 0; i < Output.Count; i++)
+        {
+            if (neuronList[i] != Output[i]) return false;
+        }
+        return true;
+    }
+
+    public bool IsOutput(Neuron neuron)
+    {
+        foreach (var node in Output)
+        {
+            if (node == neuron) return true;
+        }
+        return false;
+    }
 }

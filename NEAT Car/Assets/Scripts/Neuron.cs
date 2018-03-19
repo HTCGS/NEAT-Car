@@ -7,6 +7,8 @@ public class Neuron
 {
     public static Func<float, float> Sigmoid = (x) => { return 1 / (1 + Mathf.Pow((float)Math.E, -x)); };
 
+    public static Func<float, float> Input = (x) => x;
+
     public Func<float, float> Function;
 
     public List<Connection> Connections;
@@ -59,7 +61,14 @@ public class Neuron
 
     public void AddConnection(Neuron target)
     {
+        AddConnection(target, 0);
+    }
+
+    public void AddConnection(Neuron target, int innovation)
+    {
         float weight = UnityEngine.Random.Range(-6f, 6f);
-        Connections.Add(new Connection(target, weight));
+        Connection connection = new Connection(target, weight);
+        connection.Source = this;
+        Connections.Add(connection);
     }
 }
