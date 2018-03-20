@@ -35,7 +35,7 @@ public class Car : MonoBehaviour
         output = new List<float>() { 0, 0, 1 };
         lastPos = this.transform.position;
         Control = new NeuroNet(4, 3);
-        Control.GenerateDefaultNet(5);
+        Control.GenerateDefaultNet(5);  
     }
 
     void Update()
@@ -47,8 +47,11 @@ public class Car : MonoBehaviour
             output = Control.Run(input);
 
             //Debug.Log(input[0] + "-" + input[1] + "-" + input[2]);
-            this.transform.Rotate(this.transform.up * -Rotation * output[0] * Time.deltaTime, Space.Self);
-            this.transform.Rotate(this.transform.up * Rotation * output[1] * Time.deltaTime, Space.Self);
+            //this.transform.Rotate(this.transform.up * -Rotation * output[0] * Time.deltaTime, Space.Self);
+            //this.transform.Rotate(this.transform.up * Rotation * output[1] * Time.deltaTime, Space.Self);
+
+            float rotationAngle = (-Rotation * output[0]) + (Rotation * output[1]);
+            this.transform.Rotate(this.transform.up * rotationAngle * Time.deltaTime, Space.Self);
             this.transform.position += this.transform.forward * Speed * output[2] * Time.deltaTime;
 
             Fitness += (this.transform.position - lastPos).magnitude * fitParam;

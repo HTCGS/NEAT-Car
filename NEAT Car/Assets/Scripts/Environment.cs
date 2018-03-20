@@ -17,7 +17,7 @@ public class Environment : MonoBehaviour
     private float runTime;
     private float globalTime;
 
-    private int Generation = 1;
+    public static int Generation = 1;
     public Text GenText;
     public Text FitnessText;
 
