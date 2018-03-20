@@ -26,7 +26,8 @@ public class Environment : MonoBehaviour
         ObjectPool.InitializeObjects(CarPrefab, Population);
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
         ObjectPool.EnableObjects();
-        GeneticAlgorithm.InitializePopulation(ObjectPool.Objects);
+        //GeneticAlgorithm.InitializePopulation(ObjectPool.Objects);
+        NeatAlgorithm.InitializePopulation(ObjectPool.Objects);
         Instance = this;
 	}
 	
@@ -54,13 +55,16 @@ public class Environment : MonoBehaviour
 
     private void NewGeneration()
     {
-        GeneticAlgorithm.SortPopulation();
-        GeneticAlgorithm.Selection();
+        //GeneticAlgorithm.SortPopulation();
+        //GeneticAlgorithm.Selection();
+        NeatAlgorithm.SortPopulation();
+        NeatAlgorithm.Selection();
         ObjectPool.DisableObjects();
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
         Generation++;
         GenText.text = "Generation " + Generation;
-        FitnessText.text = "Max fitness " + GeneticAlgorithm.Net[0].Fitness;
+        //FitnessText.text = "Max fitness " + GeneticAlgorithm.Net[0].Fitness;
+        FitnessText.text = "Max fitness " + NeatAlgorithm.Net[0].Fitness;
         ObjectPool.EnableObjects();
     }
 }

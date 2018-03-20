@@ -19,6 +19,8 @@ public class Neuron
 
     public float Value;
 
+    public int Index;
+
     public Neuron()
     {
         this.InputValues = new List<float>();
@@ -30,10 +32,15 @@ public class Neuron
         this.Function = func;
     }
 
-    public void CalculateNeuronValue()
+    public Neuron(Func<float, float> func, int index) : this(func)
+    {
+        this.Index = index;
+    }
+
+    public bool CalculateNeuronValue()
     {
         this.Value = 0;
-        if (InputValues.Count != InputsSum) return;
+        if (InputValues.Count != InputsSum) return false;
         float value = 0;
         float inputSum = 0;
         foreach (var item in InputValues)
@@ -43,6 +50,7 @@ public class Neuron
         value = Function(inputSum);
         InputValues.Clear();
         this.Value = value;
+        return true;
     }
 
     public void SendValues()
@@ -68,7 +76,24 @@ public class Neuron
     {
         float weight = UnityEngine.Random.Range(-6f, 6f);
         Connection connection = new Connection(target, weight);
+        connection.Innovation = innovation;
         connection.Source = this;
         Connections.Add(connection);
+    }
+
+    public void AddConnection(Neuron target, Connection connectionData)
+    {
+        Connection connection = new Connection(target, connectionData.Weight);
+        connection.Innovation = connectionData.Innovation;
+        connection.Source = this;
+        Connections.Add(connection);
+    }
+
+    public Neuron Copy()
+    {
+        Neuron neuron = new Neuron();
+        neuron.Function = Function;
+        neuron.Index = Index;
+        return neuron;
     }
 }

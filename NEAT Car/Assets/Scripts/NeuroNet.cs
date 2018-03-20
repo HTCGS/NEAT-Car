@@ -9,8 +9,6 @@ public class NeuroNet
 
     public List<List<Neuron>> HiddenLayer;
 
-    public int Innovation;
-
     public NeuroNet()
     {
         this.Input = new List<Neuron>();
@@ -33,19 +31,18 @@ public class NeuroNet
         }
     }
 
-    public void GenerateDefaultNet()
+    public virtual void GenerateDefaultNet()
     {
         foreach (var inNode in Input)
         {
             foreach (var outNode in Output)
             {
-                inNode.AddConnection(outNode, Innovation);
-                Innovation++;
+                inNode.AddConnection(outNode);
             }
         }
     }
 
-    public void GenerateDefaultNet(params int[] layers)
+    public virtual void GenerateDefaultNet(params int[] layers)
     {
         List<Neuron> layer = new List<Neuron>();
         for (int i = 0; i < layers[0]; i++)
@@ -54,8 +51,7 @@ public class NeuroNet
             layer.Add(neuron);
             foreach (var node in Input)
             {
-                node.AddConnection(neuron, Innovation);
-                Innovation++;
+                node.AddConnection(neuron);
             }
         }
         this.HiddenLayer.Add(layer);
@@ -68,8 +64,7 @@ public class NeuroNet
                 layer.Add(neuron);
                 foreach (var node in HiddenLayer[i - 1])
                 {
-                    node.AddConnection(neuron, Innovation);
-                    Innovation++;
+                    node.AddConnection(neuron);
                 }
             }
             this.HiddenLayer.Add(layer);
@@ -82,10 +77,36 @@ public class NeuroNet
         {
             foreach (var outNode in Output)
             {
-                node.AddConnection(outNode, Innovation);
-                Innovation++;
+                node.AddConnection(outNode);
             }
         }
+    }
+
+    public List<float> Run(List<float> input)
+    {
+        List<float> output = new List<float>();
+        int index = 0;
+        foreach (var node in Input)
+        {
+            node.ReciveValue(input[index]);
+            node.CalculateNeuronValue();
+            node.SendValues();
+            index++;
+        }
+        foreach (var nodeList in HiddenLayer)
+        {
+            foreach (var node in nodeList)
+            {
+                node.CalculateNeuronValue();
+                node.SendValues();
+            }
+        }
+        foreach (var node in Output)
+        {
+            node.CalculateNeuronValue();
+            output.Add(node.Value);
+        }
+        return output;
     }
 
     public List<Connection> ToConnectionList()
@@ -135,31 +156,48 @@ public class NeuroNet
         return neuronList;
     }
 
-    public List<float> Run(List<float> input)
+    public Neuron FindNeuron(int index)
     {
-        List<float> output = new List<float>();
-        int index = 0;
         foreach (var node in Input)
         {
-            node.ReciveValue(input[index]);
-            node.CalculateNeuronValue();
-            node.SendValues();
-            index++;
+            if (node.Index == index) return node;
         }
-        foreach (var nodeList in HiddenLayer)
-        {
-            foreach (var node in nodeList)
-            {
-                node.CalculateNeuronValue();
-                node.SendValues();
-            }
-        }
+
         foreach (var node in Output)
         {
-            node.CalculateNeuronValue();
-            output.Add(node.Value);
+            if (node.Index == index) return node;
         }
-        return output;
+
+        for (int i = 0; i < HiddenLayer.Count; i++)
+        {
+            foreach (var node in HiddenLayer[i])
+            {
+                if (node.Index == index) return node;
+            }
+        }
+        return null;
+    }
+
+    public List<Neuron> NeuronLayer(Neuron neuron)
+    {
+        foreach (var node in Input)
+        {
+            if (node == neuron) return Input;
+        }
+
+        foreach (var node in Output)
+        {
+            if (node == neuron) return Output;
+        }
+
+        for (int i = 0; i < HiddenLayer.Count; i++)
+        {
+            foreach (var node in HiddenLayer[i])
+            {
+                if (node == neuron) return HiddenLayer[i];
+            }
+        }
+        return null;
     }
 
     public List<Neuron> PreviousLayer(Neuron neuron)
@@ -233,5 +271,19 @@ public class NeuroNet
             if (node == neuron) return true;
         }
         return false;
+    }
+
+    public void Clear()
+    {
+        foreach (var node in Input)
+        {
+            node.Connections.Clear();
+        }
+        foreach (var node in Output)
+        {
+            node.Connections.Clear();
+            node.InputsSum = 0;
+        }
+        HiddenLayer.Clear();
     }
 }
