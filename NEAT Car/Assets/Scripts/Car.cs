@@ -35,7 +35,7 @@ public class Car : MonoBehaviour
         lastPos = this.transform.position;
         Control = new EvolveNeuroNet(4, 3);
         //Control.GenerateDefaultNet();
-        Control.GenerateDefaultNet(5);  
+        //Control.GenerateDefaultNet(5);  
     }
 
     void Update()

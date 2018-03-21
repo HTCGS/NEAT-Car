@@ -65,7 +65,7 @@ public class Environment : MonoBehaviour
         float maxZ = netVisualization.MaxZPosition();
         float middle = (Visual.transform.position - new Vector3(Visual.transform.position.x, Visual.transform.position.y, maxZ)).magnitude;
         middle /= 2;
-        Visual.transform.position = new Vector3(Visual.transform.position.x, Visual.transform.position.y, this.transform.position.z - middle);
+        Visual.transform.position = new Vector3(Visual.transform.position.x, Visual.transform.position.y, this.transform.position.z + middle);
         netVisualization.Visualize(NeatAlgorithm.Net[0].Control);
         NeatAlgorithm.Selection();
         ObjectPool.DisableObjects();

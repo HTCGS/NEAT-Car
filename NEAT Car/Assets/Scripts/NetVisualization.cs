@@ -67,7 +67,7 @@ public class NetVisualization : MonoBehaviour
             GameObject gameObject = Instantiate(Prefab, pos, Quaternion.identity);
             gameObject.transform.SetParent(Parent.transform);
             Nodes.Add(node.Index, gameObject);
-            pos += new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
+            pos -= new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
         }
         pos += new Vector3(Prefab.transform.localScale.magnitude * 2, 0, 0);
         pos.z = this.transform.position.z;
@@ -78,7 +78,7 @@ public class NetVisualization : MonoBehaviour
                 GameObject gameObject = Instantiate(Prefab, pos, Quaternion.identity);
                 gameObject.transform.SetParent(Parent.transform);
                 Nodes.Add(node.Index, gameObject);
-                pos += new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
+                pos -= new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
             }
             pos += new Vector3(Prefab.transform.localScale.magnitude * 2, 0, 0);
             pos.z = this.transform.position.z;
@@ -88,7 +88,7 @@ public class NetVisualization : MonoBehaviour
             GameObject gameObject = Instantiate(Prefab, pos, Quaternion.identity);
             gameObject.transform.SetParent(Parent.transform);
             Nodes.Add(node.Index, gameObject);
-            pos += new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
+            pos -= new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
         }
     }
 
@@ -110,7 +110,7 @@ public class NetVisualization : MonoBehaviour
         float maxZ = 0;
         foreach (var node in Nodes)
         {
-            if (node.Value.transform.position.z > maxZ) maxZ = node.Value.transform.position.z;
+            if (node.Value.transform.position.z < maxZ) maxZ = node.Value.transform.position.z;
         }
         return maxZ;
     }
