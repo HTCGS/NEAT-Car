@@ -5,7 +5,7 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     [HideInInspector]
-    public NeuroNet Control;
+    public EvolveNeuroNet Control;
 
     public float Fitness;
 
@@ -34,7 +34,7 @@ public class Car : MonoBehaviour
         input = new List<float>();
         output = new List<float>() { 0, 0, 0 };
         lastPos = this.transform.position;
-        Control = new NeuroNet(4, 3);
+        Control = new EvolveNeuroNet(4, 3);
         Control.GenerateDefaultNet(5);  
     }
 

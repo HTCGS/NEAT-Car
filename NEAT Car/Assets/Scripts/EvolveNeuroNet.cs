@@ -124,6 +124,15 @@ public class EvolveNeuroNet : NeuroNet
                 }
             }
         }
+        ResetInnovation();
+        ResetNodeIndex();
+    }
+
+    public override void Clear()
+    {
+        base.Clear();
+        Innovation = 0;
+        NodeIndex = 0;
     }
 
     private void SetInnovations()
@@ -149,4 +158,28 @@ public class EvolveNeuroNet : NeuroNet
         }
     }
 
+    private void ResetNodeIndex()
+    {
+        NodeIndex = ToNeuronList().Max(n => n.Index);
+        NodeIndex++;
+    }
+
+    private void ResetInnovation()
+    {
+        Innovation = ToConnectionList().Max(c => c.Innovation);
+        Innovation++;
+    }
+
+    public void AddConnection(Neuron from, Neuron to)
+    {
+        from.AddConnection(to, Innovation);
+        Innovation++;
+    }
+
+    public Neuron AddNeuron()
+    {
+        Neuron neuron = new Neuron(Neuron.Sigmoid, NodeIndex);
+        NodeIndex++;
+        return neuron;
+    }
 }

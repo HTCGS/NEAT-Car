@@ -273,7 +273,7 @@ public class NeuroNet
         return false;
     }
 
-    public void Clear()
+    public virtual void Clear()
     {
         foreach (var node in Input)
         {
@@ -285,5 +285,44 @@ public class NeuroNet
             node.InputsSum = 0;
         }
         HiddenLayer.Clear();
+    }
+
+    public bool IsfreeConnection()
+    {
+        bool found = false;
+
+        int avaliableNodes = 0;
+        foreach (var nodeList in HiddenLayer)
+        {
+            avaliableNodes += nodeList.Count;
+        }
+        avaliableNodes += Output.Count;
+
+        int nodeConnections = 0;
+        foreach (var node in Input)
+        {
+            nodeConnections += node.Connections.Count;
+        }
+        if (nodeConnections == avaliableNodes) found = false;
+        else found = true;
+
+        for (int i = 0; i < HiddenLayer.Count; i++)
+        {
+            avaliableNodes = 0;
+            for (int j = i + 1; j < HiddenLayer.Count; j++) 
+            {
+                avaliableNodes += HiddenLayer[j].Count;
+            }
+            avaliableNodes += Output.Count;
+
+            nodeConnections = 0;
+            foreach (var node in HiddenLayer[i])
+            {
+                nodeConnections += node.Connections.Count;
+            }
+            if (nodeConnections == avaliableNodes) found = false;
+            else found = true;
+        }
+        return found;
     }
 }
