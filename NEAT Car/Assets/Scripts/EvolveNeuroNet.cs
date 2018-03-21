@@ -35,6 +35,7 @@ public class EvolveNeuroNet : NeuroNet
     public override void GenerateDefaultNet(params int[] layers)
     {
         base.GenerateDefaultNet(layers);
+        SetHiddenNodesIndex();
         SetInnovations();
     }
 
@@ -99,7 +100,7 @@ public class EvolveNeuroNet : NeuroNet
                         targetLayer.Add(targetNeuron);
                     }
                 }
-                else
+                else if(!IsInput(sourceNeuron) && !IsOutput(targetNeuron))
                 {
                     int sourceHiddenPos = HiddenLayer.IndexOf(sourceLayer);
                     int targetHiddenPos = HiddenLayer.IndexOf(targetLayer);
@@ -120,8 +121,8 @@ public class EvolveNeuroNet : NeuroNet
                         }
                         if (targetLayer.Count == 0) HiddenLayer.RemoveAt(targetHiddenPos);
                     }
-                    sourceNeuron.AddConnection(targetNeuron, conn);
                 }
+                sourceNeuron.AddConnection(targetNeuron, conn);
             }
         }
         ResetInnovation();
@@ -154,6 +155,18 @@ public class EvolveNeuroNet : NeuroNet
                     conn.Innovation = Innovation;
                     Innovation++;
                 }
+            }
+        }
+    }
+
+    private void SetHiddenNodesIndex()
+    {
+        foreach (var nodeList in HiddenLayer)
+        {
+            foreach (var node in nodeList)
+            {
+                node.Index = NodeIndex;
+                NodeIndex++;
             }
         }
     }

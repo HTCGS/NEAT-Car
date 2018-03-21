@@ -21,6 +21,8 @@ public class Environment : MonoBehaviour
     public Text GenText;
     public Text FitnessText;
 
+    public GameObject Visual;
+
     void Start ()
     {
         ObjectPool.InitializeObjects(CarPrefab, Population);
@@ -58,6 +60,13 @@ public class Environment : MonoBehaviour
         //GeneticAlgorithm.SortPopulation();
         //GeneticAlgorithm.Selection();
         NeatAlgorithm.SortPopulation();
+        NetVisualization netVisualization = Visual.GetComponent<NetVisualization>();
+        netVisualization.Visualize(NeatAlgorithm.Net[0].Control);
+        float maxZ = netVisualization.MaxZPosition();
+        float middle = (Visual.transform.position - new Vector3(Visual.transform.position.x, Visual.transform.position.y, maxZ)).magnitude;
+        middle /= 2;
+        Visual.transform.position = new Vector3(Visual.transform.position.x, Visual.transform.position.y, this.transform.position.z - middle);
+        netVisualization.Visualize(NeatAlgorithm.Net[0].Control);
         NeatAlgorithm.Selection();
         ObjectPool.DisableObjects();
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
