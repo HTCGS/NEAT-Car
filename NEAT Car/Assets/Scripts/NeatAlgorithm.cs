@@ -196,8 +196,6 @@ public static class NeatAlgorithm
             float mutation = 12f * mutationRate;
             if (Random.Range(0, 100) < 50) connections[index].Weight += mutation;
             else connections[index].Weight -= mutation;
-
-            Debug.Log(mutationRate);
         }
     }
 

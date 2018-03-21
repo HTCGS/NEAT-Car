@@ -148,8 +148,5 @@ public static class GeneticAlgorithm
         float mutation = 12f * mutationRate;
         if (Random.Range(0, 100) < 50) weights[index] += mutation;
         else weights[index] -= mutation;
-        //if (Random.Range(0, 100) < 50) weights[index] += weights[index] * 0.1f;
-        //else weights[index] -= weights[index] * 0.1f;
-
     }
 }

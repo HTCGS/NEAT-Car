@@ -132,7 +132,7 @@ public class EvolveNeuroNet : NeuroNet
     {
         base.Clear();
         Innovation = 0;
-        NodeIndex = 0;
+        NodeIndex = Input.Count + Output.Count;
     }
 
     private void SetInnovations()
