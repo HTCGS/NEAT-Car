@@ -192,7 +192,7 @@ public static class NeatAlgorithm
         if (connections.Count != 0)
         {
             int index = Random.Range(0, connections.Count);
-            float mutationRate = 0.1f - (0.005f * (Environment.Generation / 5));
+            float mutationRate = Mathf.Lerp(0.1f, 0.01f, Environment.Generation / 1000f);
             float mutation = 12f * mutationRate;
             if (Random.Range(0, 100) < 50) connections[index].Weight += mutation;
             else connections[index].Weight -= mutation;

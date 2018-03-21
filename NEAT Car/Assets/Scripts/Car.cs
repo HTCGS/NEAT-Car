@@ -25,7 +25,6 @@ public class Car : MonoBehaviour
     private List<float> input;
     private List<float> output;
 
-    private float time;
     private Vector3 lastPos;
     private float fitParam = 1;
 
@@ -47,7 +46,8 @@ public class Car : MonoBehaviour
             output = Control.Run(input);
 
             //Debug.Log(input[0] + "-" + input[1] + "-" + input[2]);
-            Debug.Log(output[0] + "-" + output[1] + "-" + output[2]);
+            //Debug.Log(output[0] + "-" + output[1] + "-" + output[2]);
+
             float rotationAngle = (-Rotation * output[0]) + (Rotation * output[1]);
             this.transform.Rotate(this.transform.up * rotationAngle * Time.deltaTime, Space.Self);
             this.transform.position += this.transform.forward * Speed * output[2] * Time.deltaTime;
