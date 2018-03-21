@@ -145,7 +145,7 @@ public static class NeatAlgorithm
     {
         foreach (var item in Net)
         {
-            if (Random.Range(1, 100) < 10)
+            if (Random.Range(0, 100) < 10)
             {
                 int mutationType = Random.Range(0, 100);
                 if (mutationType < 80)
@@ -196,6 +196,8 @@ public static class NeatAlgorithm
             float mutation = 12f * mutationRate;
             if (Random.Range(0, 100) < 50) connections[index].Weight += mutation;
             else connections[index].Weight -= mutation;
+
+            Debug.Log(mutationRate);
         }
     }
 
