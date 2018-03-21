@@ -166,8 +166,13 @@ public class EvolveNeuroNet : NeuroNet
 
     private void ResetInnovation()
     {
-        Innovation = ToConnectionList().Max(c => c.Innovation);
-        Innovation++;
+        List<Connection> connections = ToConnectionList();
+        if (connections.Count != 0)
+        {
+            Innovation = ToConnectionList().Max(c => c.Innovation);
+            Innovation++;
+        }
+        else Innovation = 0;
     }
 
     public void AddConnection(Neuron from, Neuron to)

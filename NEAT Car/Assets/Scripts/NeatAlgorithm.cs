@@ -54,6 +54,8 @@ public static class NeatAlgorithm
 
             conn1 = conn1.OrderBy(inn => inn.Innovation).ToList();
             conn2 = conn2.OrderBy(inn => inn.Innovation).ToList();
+            nextPopulation.Add(CopyConnections(conn1));
+            nextPopulation.Add(CopyConnections(conn2));
             List<Connection> child1 = new List<Connection>();
             List<Connection> child2 = new List<Connection>();
             int pos1 = 0;
@@ -134,15 +136,9 @@ public static class NeatAlgorithm
 
         for (int i = 0; i < Net.Count; i++)
         {
-            if (i < repSum)
-            {
-                Net[i].Control.GenerateFromConnections(nextPopulation[i]);
-            }
-            else
-            {
-                Net[i].Control.GenerateFromConnections(reproduction[i]);
-            }
+            Net[i].Control.GenerateFromConnections(nextPopulation[i]);
         }
+        Mutation();
     }
 
     public static void Mutation()
@@ -271,12 +267,17 @@ public static class NeatAlgorithm
 
     private static void RebuildNet(EvolveNeuroNet neuroNet)
     {
-        List<Connection> connections = neuroNet.ToConnectionList();
-        List<Connection> connCopy = new List<Connection>();
+        List<Connection> connCopy = CopyConnections(neuroNet.ToConnectionList());
+        neuroNet.GenerateFromConnections(connCopy);
+    }
+
+    private static List<Connection> CopyConnections(List<Connection> connections)
+    {
+        List<Connection> copy = new List<Connection>();
         foreach (var conn in connections)
         {
-            connCopy.Add(conn.Copy());
+            copy.Add(conn.Copy());
         }
-        neuroNet.GenerateFromConnections(connCopy);
+        return copy;
     }
 }
