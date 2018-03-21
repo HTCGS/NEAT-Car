@@ -147,12 +147,11 @@ public static class NeatAlgorithm
         {
             if (Random.Range(0, 100) < 10)
             {
-                int mutationType = Random.Range(0, 100);
-                if (mutationType < 80)
+                if (Random.Range(0, 100) < 60)
                 {
                     WeightMutation(item.Control);
                 }
-                else if (mutationType >= 80 && mutationType < 90)
+                else if (Random.Range(0, 100) < 20)
                 {
                     List<Connection> connections = item.Control.ToConnectionList();
                     if (connections.Count == 0)
@@ -178,7 +177,8 @@ public static class NeatAlgorithm
                         }
                     }
                 }
-                else if (mutationType >= 90 && mutationType < 100)
+                //else if (mutationType >= 90 && mutationType < 100)
+                else
                 {
                     AddNodeMutation(item.Control);
                 }
