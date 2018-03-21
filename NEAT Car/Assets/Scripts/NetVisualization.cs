@@ -21,20 +21,19 @@ public class NetVisualization : MonoBehaviour
         NodeInit(neuroNet);
         foreach (var node in neuroNet.Input)
         {
-            int pos = 0;
             foreach (var conn in node.Connections)
             {
                 GameObject gameObject = Nodes[node.Index];
-                LineRenderer lineRenderer = gameObject.GetComponent<LineRenderer>();
 
-                Vector3[] points = new Vector3[lineRenderer.positionCount];
-                lineRenderer.GetPositions(points);
-                lineRenderer.positionCount = lineRenderer.positionCount + 2;
-                lineRenderer.SetPositions(points);
+                GameObject child = Instantiate(Prefab, gameObject.transform.position, Quaternion.identity);
+                child.GetComponent<MeshRenderer>().enabled = false;
+                child.transform.SetParent(gameObject.transform);
+                LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
+                if (!conn.IsActive) lineRenderer.material.color = Color.black;
 
-                lineRenderer.SetPosition(pos, gameObject.transform.position);
-                lineRenderer.SetPosition(pos + 1, Nodes[conn.Target.Index].transform.position);
-                pos += 2;
+                lineRenderer.positionCount = 2;
+                lineRenderer.SetPosition(0, gameObject.transform.position);
+                lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
             }
         }
         foreach (var nodeList in neuroNet.HiddenLayer)
@@ -45,16 +44,16 @@ public class NetVisualization : MonoBehaviour
                 foreach (var conn in node.Connections)
                 {
                     GameObject gameObject = Nodes[node.Index];
-                    LineRenderer lineRenderer = gameObject.GetComponent<LineRenderer>();
 
-                    Vector3[] points = new Vector3[lineRenderer.positionCount];
-                    lineRenderer.GetPositions(points);
-                    lineRenderer.positionCount = lineRenderer.positionCount + 2;
-                    lineRenderer.SetPositions(points);
+                    GameObject child = Instantiate(Prefab, gameObject.transform.position, Quaternion.identity);
+                    child.GetComponent<MeshRenderer>().enabled = false;
+                    child.transform.SetParent(gameObject.transform);
+                    LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
+                    if (!conn.IsActive) lineRenderer.material.color = Color.black;
 
-                    lineRenderer.SetPosition(pos, gameObject.transform.position);
-                    lineRenderer.SetPosition(pos + 1, Nodes[conn.Target.Index].transform.position);
-                    pos += 2;
+                    lineRenderer.positionCount = 2;
+                    lineRenderer.SetPosition(0, gameObject.transform.position);
+                    lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
                 }
             }
         }
@@ -97,6 +96,10 @@ public class NetVisualization : MonoBehaviour
     {
         foreach (var node in Nodes)
         {
+            for (int i = 0; i < node.Value.transform.childCount; i++)
+            {
+                Destroy(node.Value.transform.GetChild(i).gameObject);
+            }
             Destroy(node.Value);
         }
         Nodes.Clear();
