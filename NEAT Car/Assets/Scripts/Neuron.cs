@@ -85,6 +85,8 @@ public class Neuron
     {
         Connection connection = new Connection(target, connectionData.Weight);
         connection.Innovation = connectionData.Innovation;
+        connection.IsActive = connectionData.IsActive;
+        if (!connection.IsActive) connection.Deactivate();
         connection.Source = this;
         Connections.Add(connection);
     }

@@ -40,7 +40,6 @@ public class NetVisualization : MonoBehaviour
         {
             foreach (var node in nodeList)
             {
-                int pos = 0;
                 foreach (var conn in node.Connections)
                 {
                     GameObject gameObject = Nodes[node.Index];

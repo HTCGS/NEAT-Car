@@ -31,7 +31,7 @@ public class Environment : MonoBehaviour
         //GeneticAlgorithm.InitializePopulation(ObjectPool.Objects);
         NeatAlgorithm.InitializePopulation(ObjectPool.Objects);
         Instance = this;
-	}
+    }
 	
 	void Update ()
     {

@@ -297,6 +297,7 @@ public class NeuroNet
             avaliableNodes += nodeList.Count;
         }
         avaliableNodes += Output.Count;
+        avaliableNodes *= Input.Count;
 
         int nodeConnections = 0;
         foreach (var node in Input)
@@ -314,6 +315,7 @@ public class NeuroNet
                 avaliableNodes += HiddenLayer[j].Count;
             }
             avaliableNodes += Output.Count;
+            avaliableNodes *= HiddenLayer[i].Count;
 
             nodeConnections = 0;
             foreach (var node in HiddenLayer[i])

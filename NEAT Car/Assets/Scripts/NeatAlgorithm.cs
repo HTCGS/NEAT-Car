@@ -62,6 +62,10 @@ public static class NeatAlgorithm
             int pos2 = 0;
             do
             {
+                if(conn1.Count != conn2.Count)
+                {
+
+                }
                 if (pos1 < conn1.Count && pos2 < conn2.Count)
                 {
                     if (conn1[pos1].Innovation == conn2[pos2].Innovation)
@@ -94,7 +98,7 @@ public static class NeatAlgorithm
                     }
                     else if (conn1[pos1].Innovation < conn2[pos2].Innovation)
                     {
-                        if (Random.Range(0, 100) < 50)
+                        if (Random.Range(0, 100) < 70)
                         {
                             child1.Add(conn1[pos1].Copy());
                             child2.Add(conn1[pos1].Copy());
@@ -103,7 +107,7 @@ public static class NeatAlgorithm
                     }
                     else
                     {
-                        if (Random.Range(0, 100) < 50)
+                        if (Random.Range(0, 100) < 70)
                         {
                             child1.Add(conn2[pos2].Copy());
                             child2.Add(conn2[pos2].Copy());
@@ -113,7 +117,7 @@ public static class NeatAlgorithm
                 }
                 else if (pos1 < conn1.Count)
                 {
-                    if (Random.Range(0, 100) < 50)
+                    if (Random.Range(0, 100) < 70)
                     {
                         child1.Add(conn1[pos1].Copy());
                         child2.Add(conn1[pos1].Copy());
@@ -122,7 +126,7 @@ public static class NeatAlgorithm
                 }
                 else if (pos2 < conn2.Count)
                 {
-                    if (Random.Range(0, 100) < 50)
+                    if (Random.Range(0, 100) < 70)
                     {
                         child1.Add(conn2[pos2].Copy());
                         child2.Add(conn2[pos2].Copy());
@@ -147,11 +151,12 @@ public static class NeatAlgorithm
         {
             if (Random.Range(0, 100) < 10)
             {
-                if (Random.Range(0, 100) < 60)
+                float mutationType = Random.Range(0, 100);
+                if (mutationType < 60)
                 {
                     WeightMutation(item.Control);
                 }
-                else if (Random.Range(0, 100) < 20)
+                else if (mutationType >= 60 && mutationType < 80)
                 {
                     List<Connection> connections = item.Control.ToConnectionList();
                     if (connections.Count == 0)
@@ -177,7 +182,6 @@ public static class NeatAlgorithm
                         }
                     }
                 }
-                //else if (mutationType >= 90 && mutationType < 100)
                 else
                 {
                     AddNodeMutation(item.Control);
@@ -212,15 +216,18 @@ public static class NeatAlgorithm
             if (neuroNet.IsOutput(neurons[from])) found = false;
             else found = true;
 
-            to = Random.Range(0, neurons.Count);
-            if (to == from) found = false;
-            else
+            if (found)
             {
-                if (neuroNet.IsInput(neurons[to])) found = false;
-                else found = true;
-                foreach (var conn in neurons[from].Connections)
+                to = Random.Range(0, neurons.Count);
+                if (to == from) found = false;
+                else
                 {
-                    if (conn.Target.Index == neurons[to].Index) found = false;
+                    if (neuroNet.IsInput(neurons[to])) found = false;
+                    else found = true;
+                    foreach (var conn in neurons[from].Connections)
+                    {
+                        if (conn.Target.Index == neurons[to].Index) found = false;
+                    }
                 }
             }
         } while (!found);
@@ -260,6 +267,9 @@ public static class NeatAlgorithm
                 Neuron neuron = neuroNet.AddNeuron();
                 neuroNet.AddConnection(connections[index].Source, neuron);
                 neuroNet.AddConnection(neuron, connections[index].Target);
+                List<Neuron> list = new List<Neuron>();
+                list.Add(neuron);
+                neuroNet.HiddenLayer.Add(list);
             }
             RebuildNet(neuroNet);
         }
