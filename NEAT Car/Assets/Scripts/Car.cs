@@ -34,7 +34,7 @@ public class Car : MonoBehaviour
         output = new List<float>() { 0, 0, 0 };
         lastPos = this.transform.position;
         Control = new EvolveNeuroNet(4, 3);
-        //Control.GenerateDefaultNet();
+        Control.GenerateDefaultNet();
         //Control.GenerateDefaultNet(5);  
     }
 
