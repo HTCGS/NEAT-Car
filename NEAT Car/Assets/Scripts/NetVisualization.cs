@@ -8,6 +8,8 @@ public class NetVisualization : MonoBehaviour
 
     public GameObject Parent;
 
+    public GameObject Text;
+
     private Dictionary<int, GameObject> Nodes;
 
     void Start()
@@ -21,6 +23,7 @@ public class NetVisualization : MonoBehaviour
         NodeInit(neuroNet);
         foreach (var node in neuroNet.Input)
         {
+            int pos = 0;
             foreach (var conn in node.Connections)
             {
                 GameObject gameObject = Nodes[node.Index];
@@ -34,12 +37,23 @@ public class NetVisualization : MonoBehaviour
                 lineRenderer.positionCount = 2;
                 lineRenderer.SetPosition(0, gameObject.transform.position);
                 lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
+
+                Vector3 textPos = child.transform.position;
+                textPos.z += child.transform.localScale.magnitude;
+                textPos.x += (child.transform.localScale.magnitude);
+                textPos.z -= pos * 1.2f;
+                pos++;
+                GameObject text = Instantiate(Text, textPos, Text.transform.rotation);
+                text.transform.SetParent(child.transform);
+                TextMesh textMesh = text.GetComponent<TextMesh>();
+                textMesh.text = conn.Weight.ToString("F2");
             }
         }
         foreach (var nodeList in neuroNet.HiddenLayer)
         {
             foreach (var node in nodeList)
             {
+                int pos = 0;
                 foreach (var conn in node.Connections)
                 {
                     GameObject gameObject = Nodes[node.Index];
@@ -53,6 +67,17 @@ public class NetVisualization : MonoBehaviour
                     lineRenderer.positionCount = 2;
                     lineRenderer.SetPosition(0, gameObject.transform.position);
                     lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
+
+
+                    Vector3 textPos = child.transform.position;
+                    textPos.z += child.transform.localScale.magnitude;
+                    textPos.x += (child.transform.localScale.magnitude);
+                    textPos.z -= pos * 1.2f;
+                    pos++;
+                    GameObject text = Instantiate(Text, textPos, Text.transform.rotation);
+                    text.transform.SetParent(child.transform);
+                    TextMesh textMesh = text.GetComponent<TextMesh>();
+                    textMesh.text = conn.Weight.ToString("F2");
                 }
             }
         }
@@ -97,6 +122,11 @@ public class NetVisualization : MonoBehaviour
         {
             for (int i = 0; i < node.Value.transform.childCount; i++)
             {
+                GameObject gameObject = node.Value.transform.GetChild(i).gameObject;
+                for (int j = 0; j < gameObject.transform.childCount; j++)
+                {
+                    Destroy(gameObject.transform.GetChild(j).gameObject);
+                }
                 Destroy(node.Value.transform.GetChild(i).gameObject);
             }
             Destroy(node.Value);
