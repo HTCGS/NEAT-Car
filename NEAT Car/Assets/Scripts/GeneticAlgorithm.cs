@@ -144,7 +144,7 @@ public static class GeneticAlgorithm
     public static void Mutation(List<float> weights)
     {
         int index = Random.Range(0, weights.Count);
-        float mutationRate = Mathf.Lerp(0.1f, 0.01f, Environment.Generation / 1000f);
+        float mutationRate = Mathf.Lerp(0.1f, 0.01f, Environment.Generation / 200f);
         float mutation = 12f * mutationRate;
         if (Random.Range(0, 100) < 50) weights[index] += mutation;
         else weights[index] -= mutation;

@@ -28,8 +28,8 @@ public class Environment : MonoBehaviour
         ObjectPool.InitializeObjects(CarPrefab, Population);
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
         ObjectPool.EnableObjects();
-        //GeneticAlgorithm.InitializePopulation(ObjectPool.Objects);
-        NeatAlgorithm.InitializePopulation(ObjectPool.Objects);
+        GeneticAlgorithm.InitializePopulation(ObjectPool.Objects);
+        //NeatAlgorithm.InitializePopulation(ObjectPool.Objects);
         Instance = this;
     }
 	
@@ -57,23 +57,30 @@ public class Environment : MonoBehaviour
 
     private void NewGeneration()
     {
-        //GeneticAlgorithm.SortPopulation();
-        //GeneticAlgorithm.Selection();
-        NeatAlgorithm.SortPopulation();
-        NetVisualization netVisualization = Visual.GetComponent<NetVisualization>();
-        netVisualization.Visualize(NeatAlgorithm.Net[0].Control);
-        float maxZ = netVisualization.MaxZPosition();
-        float middle = (Visual.transform.position - new Vector3(Visual.transform.position.x, Visual.transform.position.y, maxZ)).magnitude;
-        middle /= 2;
-        Visual.transform.position = new Vector3(Visual.transform.position.x, Visual.transform.position.y, this.transform.position.z + middle);
-        netVisualization.Visualize(NeatAlgorithm.Net[0].Control);
-        NeatAlgorithm.Selection();
+        GeneticAlgorithm.SortPopulation();
+        VisualizeNet(GeneticAlgorithm.Net[0].Control);
+        GeneticAlgorithm.Selection();
+        //NeatAlgorithm.SortPopulation();
+        //VisualizeNet(NeatAlgorithm.Net[0].Control);
+        //NeatAlgorithm.Selection();
+
         ObjectPool.DisableObjects();
         ObjectPool.SetDefaultPosition(StartPosition.transform.position, StartPosition.transform.rotation);
         Generation++;
         GenText.text = "Generation " + Generation;
-        //FitnessText.text = "Max fitness " + GeneticAlgorithm.Net[0].Fitness;
-        FitnessText.text = "Max fitness " + NeatAlgorithm.Net[0].Fitness;
+        FitnessText.text = "Max fitness " + GeneticAlgorithm.Net[0].Fitness;
+        //FitnessText.text = "Max fitness " + NeatAlgorithm.Net[0].Fitness;
         ObjectPool.EnableObjects();
+    }
+
+    private void VisualizeNet(NeuroNet neuroNet)
+    {
+        NetVisualization netVisualization = Visual.GetComponent<NetVisualization>();
+        netVisualization.Visualize(neuroNet);
+        float maxZ = netVisualization.MaxZPosition();
+        float middle = (Visual.transform.position - new Vector3(Visual.transform.position.x, Visual.transform.position.y, maxZ)).magnitude;
+        middle /= 2;
+        Visual.transform.position = new Vector3(Visual.transform.position.x, Visual.transform.position.y, this.transform.position.z + middle);
+        netVisualization.Visualize(neuroNet);
     }
 }
