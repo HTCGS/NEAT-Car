@@ -5,7 +5,7 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     [HideInInspector]
-    public EvolveNeuroNet Control;
+    public NeuroNet Control;
 
     public float Fitness;
 
@@ -33,9 +33,10 @@ public class Car : MonoBehaviour
         input = new List<float>();
         output = new List<float>() { 0, 0, 0 };
         lastPos = this.transform.position;
+        //Control = new NeuroNet(4, 3);
         Control = new EvolveNeuroNet(4, 3);
-        //Control.GenerateDefaultNet();
-        Control.GenerateDefaultNet(5);  
+        Control.GenerateDefaultNet();
+        //Control.GenerateDefaultNet(5);  
     }
 
     void Update()
@@ -67,7 +68,11 @@ public class Car : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.tag != "Start") run = false;
+        if (other.transform.tag != "Start") 
+        {
+            run = false;
+            Fitness -= 15;
+        }
         else fitParam = 1;
     }
 

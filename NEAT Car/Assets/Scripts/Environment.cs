@@ -60,6 +60,7 @@ public class Environment : MonoBehaviour
         GeneticAlgorithm.SortPopulation();
         VisualizeNet(GeneticAlgorithm.Net[0].Control);
         GeneticAlgorithm.Selection();
+
         //NeatAlgorithm.SortPopulation();
         //VisualizeNet(NeatAlgorithm.Net[0].Control);
         //NeatAlgorithm.Selection();

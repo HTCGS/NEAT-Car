@@ -20,70 +20,21 @@ public class NetVisualization : MonoBehaviour
     public void Visualize(NeuroNet neuroNet)
     {
         DeleteNodes();
-        NodeInit(neuroNet);
+        NodeVizualization(neuroNet);
         foreach (var node in neuroNet.Input)
         {
-            int pos = 0;
-            foreach (var conn in node.Connections)
-            {
-                GameObject gameObject = Nodes[node.Index];
-
-                GameObject child = Instantiate(Prefab, gameObject.transform.position, Quaternion.identity);
-                child.GetComponent<MeshRenderer>().enabled = false;
-                child.transform.SetParent(gameObject.transform);
-                LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
-                if (!conn.IsActive) lineRenderer.material.color = Color.black;
-
-                lineRenderer.positionCount = 2;
-                lineRenderer.SetPosition(0, gameObject.transform.position);
-                lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
-
-                Vector3 textPos = child.transform.position;
-                textPos.z += child.transform.localScale.magnitude;
-                textPos.x += (child.transform.localScale.magnitude);
-                textPos.z -= pos * 1.2f;
-                pos++;
-                GameObject text = Instantiate(Text, textPos, Text.transform.rotation);
-                text.transform.SetParent(child.transform);
-                TextMesh textMesh = text.GetComponent<TextMesh>();
-                textMesh.text = conn.Weight.ToString("F2");
-            }
+            ConnectionVizualization(node);
         }
         foreach (var nodeList in neuroNet.HiddenLayer)
         {
             foreach (var node in nodeList)
             {
-                int pos = 0;
-                foreach (var conn in node.Connections)
-                {
-                    GameObject gameObject = Nodes[node.Index];
-
-                    GameObject child = Instantiate(Prefab, gameObject.transform.position, Quaternion.identity);
-                    child.GetComponent<MeshRenderer>().enabled = false;
-                    child.transform.SetParent(gameObject.transform);
-                    LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
-                    if (!conn.IsActive) lineRenderer.material.color = Color.black;
-
-                    lineRenderer.positionCount = 2;
-                    lineRenderer.SetPosition(0, gameObject.transform.position);
-                    lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
-
-
-                    Vector3 textPos = child.transform.position;
-                    textPos.z += child.transform.localScale.magnitude;
-                    textPos.x += (child.transform.localScale.magnitude);
-                    textPos.z -= pos * 1.2f;
-                    pos++;
-                    GameObject text = Instantiate(Text, textPos, Text.transform.rotation);
-                    text.transform.SetParent(child.transform);
-                    TextMesh textMesh = text.GetComponent<TextMesh>();
-                    textMesh.text = conn.Weight.ToString("F2");
-                }
+                ConnectionVizualization(node);
             }
         }
     }
 
-    private void NodeInit(NeuroNet neuroNet)
+    private void NodeVizualization(NeuroNet neuroNet)
     {
         Vector3 pos = this.transform.position;
         foreach (var node in neuroNet.Input)
@@ -113,6 +64,35 @@ public class NetVisualization : MonoBehaviour
             gameObject.transform.SetParent(Parent.transform);
             Nodes.Add(node.Index, gameObject);
             pos -= new Vector3(0, 0, Prefab.transform.localScale.magnitude * 1.5f);
+        }
+    }
+
+    private void ConnectionVizualization(Neuron node)
+    {
+        int pos = 0;
+        foreach (var conn in node.Connections)
+        {
+            GameObject gameObject = Nodes[node.Index];
+
+            GameObject child = Instantiate(Prefab, gameObject.transform.position, Quaternion.identity);
+            child.GetComponent<MeshRenderer>().enabled = false;
+            child.transform.SetParent(gameObject.transform);
+            LineRenderer lineRenderer = child.GetComponent<LineRenderer>();
+            if (!conn.IsActive) lineRenderer.material.color = Color.black;
+
+            lineRenderer.positionCount = 2;
+            lineRenderer.SetPosition(0, gameObject.transform.position);
+            lineRenderer.SetPosition(1, Nodes[conn.Target.Index].transform.position);
+
+            Vector3 textPos = child.transform.position;
+            textPos.z += child.transform.localScale.magnitude;
+            textPos.x += (child.transform.localScale.magnitude);
+            textPos.z -= pos * 1.2f;
+            pos++;
+            GameObject text = Instantiate(Text, textPos, Text.transform.rotation);
+            text.transform.SetParent(child.transform);
+            TextMesh textMesh = text.GetComponent<TextMesh>();
+            textMesh.text = conn.Weight.ToString("F2");
         }
     }
 

@@ -140,7 +140,7 @@ public static class NeatAlgorithm
 
         for (int i = 0; i < Net.Count; i++)
         {
-            Net[i].Control.GenerateFromConnections(nextPopulation[i]);
+            (Net[i].Control as EvolveNeuroNet).GenerateFromConnections(nextPopulation[i]);
         }
         Mutation();
     }
@@ -154,14 +154,14 @@ public static class NeatAlgorithm
                 float mutationType = Random.Range(0, 100);
                 if (mutationType < 60)
                 {
-                    WeightMutation(item.Control);
+                    WeightMutation(item.Control as EvolveNeuroNet);
                 }
                 else if (mutationType >= 60 && mutationType < 80)
                 {
                     List<Connection> connections = item.Control.ToConnectionList();
                     if (connections.Count == 0)
                     {
-                        AddConnectionMutation(item.Control);
+                        AddConnectionMutation(item.Control as EvolveNeuroNet);
                     }
                     else
                     {
@@ -169,22 +169,22 @@ public static class NeatAlgorithm
                         {
                             if (item.Control.IsfreeConnection())
                             {
-                                AddConnectionMutation(item.Control);
+                                AddConnectionMutation(item.Control as EvolveNeuroNet);
                             }
                             else
                             {
-                                OnOffConnectionMutation(item.Control);
+                                OnOffConnectionMutation(item.Control as EvolveNeuroNet);
                             }
                         }
                         else
                         {
-                            OnOffConnectionMutation(item.Control);
+                            OnOffConnectionMutation(item.Control as EvolveNeuroNet);
                         }
                     }
                 }
                 else
                 {
-                    AddNodeMutation(item.Control);
+                    AddNodeMutation(item.Control as EvolveNeuroNet);
                 }
             }
         }
