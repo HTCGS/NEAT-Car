@@ -9,6 +9,8 @@ public class Neuron
 
     public static Func<float, float> Input = (x) => x;
 
+    public static Func<float, float> Bias = (x) => 1;
+
     public Func<float, float> Function;
 
     public List<Connection> Connections;

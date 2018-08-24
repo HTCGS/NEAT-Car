@@ -45,6 +45,7 @@ public class Car : MonoBehaviour
         {
             input = SensorData();
             input.Add(output[2] * Speed);
+            input.Add(0);
             output = Control.Run(input);
 
             //Debug.Log(input[0] + "-" + input[1] + "-" + input[2]);

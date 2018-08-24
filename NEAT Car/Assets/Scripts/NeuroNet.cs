@@ -40,6 +40,7 @@ public class NeuroNet
                 inNode.AddConnection(outNode);
             }
         }
+        GenerateBiases();
     }
 
     public virtual void GenerateDefaultNet(params int[] layers)
@@ -78,6 +79,41 @@ public class NeuroNet
             foreach (var outNode in Output)
             {
                 node.AddConnection(outNode);
+            }
+        }
+        GenerateBiases();
+    }
+
+    protected void GenerateBiases()
+    {
+        Neuron outputBias = new Neuron(Neuron.Bias);
+        foreach (var node in Output)
+        {
+            outputBias.AddConnection(node);
+        }
+
+        if(this.HiddenLayer.Count == 0)
+        {
+            this.Input.Add(outputBias);
+        }
+        else
+        {
+            List<Neuron> biases = new List<Neuron>();
+            foreach (var nodeList in this.HiddenLayer)
+            {
+                Neuron bias = new Neuron(Neuron.Bias);
+                foreach (var node in nodeList)
+                {
+                    bias.AddConnection(node);                    
+                }
+                biases.Add(bias);
+            }
+
+            this.Input.Add(biases[0]);
+            this.HiddenLayer[HiddenLayer.Count - 1].Add(outputBias);
+            for (int i = 0; i < this.HiddenLayer.Count - 1; i++)
+            {
+                this.HiddenLayer[i].Add(biases[i + 1]);
             }
         }
     }

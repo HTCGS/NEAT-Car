@@ -29,6 +29,7 @@ public class EvolveNeuroNet : NeuroNet
     public override void GenerateDefaultNet()
     {
         base.GenerateDefaultNet();
+        SetBiasNodesIndex();
         SetInnovations();
     }
 
@@ -36,6 +37,7 @@ public class EvolveNeuroNet : NeuroNet
     {
         base.GenerateDefaultNet(layers);
         SetHiddenNodesIndex();
+        SetBiasNodesIndex();
         SetInnovations();
     }
 
@@ -168,6 +170,17 @@ public class EvolveNeuroNet : NeuroNet
                 node.Index = NodeIndex;
                 NodeIndex++;
             }
+        }
+    }
+
+    private void SetBiasNodesIndex()
+    {
+        this.Input[this.Input.Count - 1].Index = NodeIndex;
+        NodeIndex++;
+        foreach (var nodeList in this.HiddenLayer)
+        {
+            nodeList[nodeList.Count - 1].Index = NodeIndex;
+            NodeIndex++;
         }
     }
 
